@@ -1,15 +1,15 @@
-# Contribution [#]: [Issue Title]
+# Contribution [#242]: [feat: Add JAX-RS exception mappers for REST API error handling]
 
-**Contribution Number:** [1 / 2 / 3]  
-**Student:** [Your Name]  
-**Issue:** [GitHub issue link]  
-**Status:** [Phase I / Phase II / Phase III / Phase IV] [In Progress / Complete]
+**Contribution Number:** [1]  
+**Student:** [Brandon Trieu]  
+**Issue:** [[GitHub issue link](https://github.com/carlos-emr/carlos/issues/242)]  
+**Status:** [Phase I] [Complete]
 
 ---
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs explaining why this issue interests you, how it matches your skills/learning goals, what you hope to learn]
+I chose issue #242 "feat: Add JAX-RS exception mappers for REST API error handling," because I have experience with Java and my goal is to improve my backend development skills. I hope to learn skills such as how to cleanly handle server-side errors. The issue is labeled "good first issue" and has clear guidance, providing the perfect issue to gain valuable experience that meets my desires.
 
 ---
 
