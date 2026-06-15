@@ -17,7 +17,7 @@ I chose issue #242 "feat: Add JAX-RS exception mappers for REST API error handli
 
 ### Problem Description
 
-The issue is that the CARLOS REST API doesn't have standardized error handling, meaning that when exceptions are thrown, there are no instructions on how to handle them. This results in a default returning of HTTP 500 with an HTML error page and exposed stack traces regardless of the actual error. The clients receive the wrong HTTP status code and internal details are exposed which creates security risks.
+The issue is that when exceptions are thrown, there are no instructions on how to handle them. This results in a default returning of HTTP 500 with an HTML error page and exposed stack traces regardless of the actual error. The clients receive the wrong HTTP status code and internal details are exposed which creates security risks.
 
 ### Expected Behavior
 
@@ -95,7 +95,7 @@ Caused by: java.lang.IllegalArgumentException: No enum constant io.github.carlos
 
 ### Analysis
 
-[Your analysis of the root cause - what's causing the issue?]
+The root cause is that the CARLOS REST API doesn't have standardized error handling. There are no JAX-RS instructions for how to handle thrown exceptions, so the server defaults to return an HTML error page with HTTP 500 status code. 
 
 ### Proposed Solution
 
@@ -105,14 +105,16 @@ Caused by: java.lang.IllegalArgumentException: No enum constant io.github.carlos
 
 Using UMPIRE framework (adapted):
 
-**Understand:** [Restate the problem]
+**Understand:** The problem is that there are unhandled exceptions causing an incorrect return of error information. The CARLOS REST API lacks standardized error handling, so when exceptions are thrown, there are no instructions for how to handle them, causing the server to default to returning an HTML error page with an HTTP 500 status code. This is an issue because the status code is incorrect and the response format is incorrect (HTML instead of JSON). Stack traces are also exposed to clients, creating security vulnerabilities. A fixed implementation should return the correct HTTP status code, provide structured JSON error responses, log full stack traces server-side only, and never expose internal details to clients.
 
-**Match:** [What similar patterns/solutions exist in the codebase?]
+**Match:** The applicationContextREST.xml file has a JAX-RS providers section where the mappers just need to be registered. The Jackson JSOn provider is also already configured. The pattern already exists in JunoEMR, a different project which shares the same OSCAR McMaster heritage as CARLOS. The exception mapper pattern is adapted from JunoEMR's implementation. 
 
 **Plan:** [Step-by-step implementation plan]
-1. [Modify file X to do Y]
-2. [Add function Z]
-3. [Update tests]
+1. Find AccessDeniedException
+2. Create ErrorResponse.java
+3. Create exception mapper classes
+4. Register mappers in applicationContextREST.xml
+5. Create test files
 
 **Implement:** [Link to your branch/commits as you work]
 
