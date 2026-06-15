@@ -116,11 +116,29 @@ Using UMPIRE framework (adapted):
 4. Register mappers in applicationContextREST.xml
 5. Create test files
 
-**Implement:** [Link to your branch/commits as you work]
+**Implement:** [[Link to your branch/commits as you work]](https://github.com/brndntru/carlos/tree/fix-issue-242)
 
 **Review:** [Self-review checklist - does it follow the project's contribution guidelines?]
+* Follow pull request guidelines (target develop, reference related issues, include clear description of what changed and why, add tests for new functionality, keep PRs focused)
+* Follow commit message formatting conventions
+* Follow mandatory security practices (output encoding, parameterized queries only, authorization checks, file path validation, no PHI in logs)
+* Follow code patterns (Strus2 Actions, Spring Integration, package namespace, copyright headers)
+* Build passes with make install
 
-**Evaluate:** [How will you verify it works?]
+**Evaluate:** 
+I will test it with the automated testing and also manually test it.
+
+Automated:
+* 14 unit tests
+* 8 integration tests
+* All tests pass with make install --run-tests
+
+Manual:
+* Route to http://localhost:8080/carlos/ws/rs/rx/drugs/active/1 in browser
+* Check before and after fix:
+   * before: HTML response with HTTP 500 status code
+   * after: JSON response with HTTP 400 status code
+* Check container logs to confirm full stack trace still logged server-side only
 
 ---
 
