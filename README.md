@@ -163,13 +163,35 @@ Manual:
 
 ## Implementation Notes
 
-### Week [X] Progress
+### Week [1] Progress
 
-[What you built this week, challenges faced, decisions made]
+- Phase I Complete
+ - selected issue #242 - feat: Add JAX-RS exception mappers for REST API error handling
+ - created Github repo, contribution README, forked project
+ - challenges: not much except choosing an issue that fits my skills, background, and goals
 
-### Week [Y] Progress
+### Week [2] Progress
 
-[Continue documenting as you work]
+- Phase II Complete
+ - set up local environment with project and dev container
+ - created working branch and successfully reproduced issue
+ - developed solution plan
+ - challenges: issues with container build (kept getting stuck at certain point in installation)
+
+### Week [3] Progress
+
+- Phase III started and in progress
+ - reviewed contribution guidelines and continued to analyze and understand issue more thoroughly
+ - feat: added ErrorResponse class
+ - feat: added JAX-RS exception mappers
+ - challenges: more issues with container build so had to rebuild and reconfigure local environment setup, changes to container weren't being seen in local project
+
+### Week [4] Progress
+
+- Phase III in progress
+ - fix: registered JAX-RS exception mappers to return JSON erros
+ - error codes now return as the correct code with the correct response page (JSON) instead of HTML
+ - challenges: not much, need to create tests to ensure fixes/features are functioning properly
 
 ### Code Changes
 
