@@ -60,7 +60,7 @@ Regardless of the error, the server returns:
 
 ### Reproduction Evidence
 
-- **Commit showing reproduction:** [[Link to commit in your fork]](https://github.com/brndntru/carlos/tree/fix-issue-242)
+- **Commit showing reproduction:** [[Forked Github repo]](https://github.com/brndntru/carlos/tree/fix-issue-242)
 - **Screenshots/logs:** <img width="1883" height="383" alt="image" src="https://github.com/user-attachments/assets/c879ee99-d6c1-4e09-a00d-57d7bee52aa5" /> <img width="920" height="268" alt="image" src="https://github.com/user-attachments/assets/e5a7d259-99b3-4025-88a3-4f5b9224e794" />
 tail -100 /usr/local/tomcat/logs/catalina.out | grep -A 20 "AccessDenied\|Exception"
 Caused by: java.lang.IllegalArgumentException: No enum constant io.github.carlos_emr.carlos.webserv.rest.to.model.RxStatus.ACTIVE
@@ -116,7 +116,7 @@ Using UMPIRE framework (adapted):
 4. Register mappers in applicationContextREST.xml
 5. Create test files
 
-**Implement:** [[Link to your branch/commits as you work]](https://github.com/brndntru/carlos/tree/fix-issue-242)
+**Implement:** [[Forked Github repo branch]](https://github.com/brndntru/carlos/tree/fix-issue-242)
 
 **Review:** [Self-review checklist - does it follow the project's contribution guidelines?]
 * Follow pull request guidelines (target develop, reference related issues, include clear description of what changed and why, add tests for new functionality, keep PRs focused)
