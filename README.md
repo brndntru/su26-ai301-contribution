@@ -190,8 +190,13 @@ Manual:
 
 - Phase III in progress
  - fix: registered JAX-RS exception mappers to return JSON erros
- - error codes now return as the correct code with the correct response page (JSON) instead of HTML
+ - error codes should now return as the correct code with the correct response page (JSON) instead of HTML
  - challenges: not much, need to create tests to ensure fixes/features are functioning properly
+
+### Week [5] Progress
+- Phase III in progress
+ - test: added unit tests for JAX-RS
+ - challenges: issues with live verification (building/running tests) against dev container, still displaying error 500 code in HTML (exception mappers not catching fully)
 
 ### Code Changes
 
