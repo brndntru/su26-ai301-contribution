@@ -196,7 +196,14 @@ Manual:
 ### Week [5] Progress
 - Phase III in progress
  - test: added unit tests for JAX-RS
+ - fix: registered exception mappers on the /ws/rs JAX-RS server
+ - manually tested at localhost directory - properly displays clean structured JSON response with HTTP 400 error code and timestamp 
  - challenges: issues with live verification (building/running tests) against dev container, still displaying error 500 code in HTML (exception mappers not catching fully)
+
+### Week [6] Progress
+- Phase III Complete
+ - reconfigured unit tests and added 8 integration tests
+ - challenges: unit tests were passing but integration tests were failing on server startup
 
 ### Code Changes
 
