@@ -252,9 +252,23 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
 
 ### Code Changes
 
-- **Files modified:** [List]
-- **Key commits:** [Links to important commits]
-- **Approach decisions:** [Why you chose certain approaches]
+**Files modified:** [List]
+**Key commits:** [Links to important commits]
+- `5f4e5be` feat: add ErrorResponse class for structured JSON error responses 
+- `5a9740f` feat: add JAX-RS exception mappers for REST API error handling
+- `2769920` fix: register JAX-RS exception mappers to return JSON errors
+- `b9180b6` test: add unit tests for JAX-RS
+- `e676198` fix: register exception mappers on the /ws/rs JAX-RS server
+- `cbce03a` fix: align REST exception mappers with issue #242 spec and add full test suite
+- `27172460` fix: honor Jackson annotations on the /ws/rs JSON mapper
+
+**Approach decisions:** [Why you chose certain approaches]
+- **Six mappers matching the issue spec exactly** An initial codebase-derived set (WebApplication/OperationNotSupported mappers) was replaced once the authoritative issue table was confirmed — added `PatientDirective`/`Conversion`, fixed `Security`'s code to `SECURITY_ERROR`
+- **Registered on *both* JAX-RS servers** The endpoint that actually 500'd (`/ws/rs/*`) is served by `spring_ws.xml`, not `applicationContextREST.xml`. Registering only in the file the issue mentioned wasn't enough — verified live
+- **Clean the message at the source, not in the mapper** `RxStatus.valueOf`'s native message embeds a fully-qualified class name; `IllegalArgumentExceptionMapper` faithfully echoes the message (per spec), and the response stack-trace sanitizer then treats the FQCN as a leak and replaces the body with HTML. Fixing `RxWebService` to throw a clean message keeps the mapper generic and yields a proper JSON 400
+- **Fixed the Jackson introspector rather than enabling global `NON_NULL`** Root cause of `"details":null` was a JAXB-only introspector on the `/ws/rs` mapper that ignored `@JsonInclude`. Switching to a Jackson-primary / JAXB-secondary pair honors Jackson annotations while keeping `@Xml*` DTOs working — targeted, and consistent with the sibling server config
+- **PHI discipline throughout** Full exceptions/stack traces logged server-side via `LogSafe`; client bodies carry generic messages; PHI-correlating identifiers (`AccessDeniedException` subject / `demographicNo`) never reach the response
+- **Every mapper forces `application/json`** so error bodies can't fall through to the XML provider; integration tests run through an in-process CXF server (local transport) with a production-mirroring JSON provider
 
 ---
 
