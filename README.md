@@ -3,7 +3,7 @@
 **Contribution Number:** [1]  
 **Student:** [Brandon Trieu]  
 **Issue:** [[GitHub issue link](https://github.com/carlos-emr/carlos/issues/242)]  
-**Status:** [Phase III] [In Progress]
+**Status:** [Phase III] [Complete]
 
 ---
 
@@ -229,26 +229,43 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
  - reviewed contribution guidelines and continued to analyze and understand issue more thoroughly
  - feat: added ErrorResponse class
  - feat: added JAX-RS exception mappers
- - challenges: more issues with container build so had to rebuild and reconfigure local environment setup, changes to container weren't being seen in local project
+ - challenges:
+   - more issues with container build so had to rebuild and reconfigure local environment setup; issues with PlayWright installation
+   - changes to container weren't being seen in local project
+   - mapper set was derived from what hte codebase actually throws -> turned out not to match the issue spec
 
 ### Week [4] Progress
 
 - Phase III in progress
  - fix: registered JAX-RS exception mappers to return JSON erros
  - error codes should now return as the correct code with the correct response page (JSON) instead of HTML
- - challenges: not much, need to create tests to ensure fixes/features are functioning properly
+ - challenges:
+   - had to pick right `<jaxrs:providers>` block and match existing inline-bean pattern, file turned out to be the wrong server
 
 ### Week [5] Progress
 - Phase III in progress
  - test: added unit tests for JAX-RS
  - fix: registered exception mappers on the /ws/rs JAX-RS server
  - manually tested at localhost directory - properly displays clean structured JSON response with HTTP 400 error code and timestamp 
- - challenges: issues with live verification (building/running tests) against dev container, still displaying error 500 code in HTML (exception mappers not catching fully)
+ - challenges:
+   - issues with live verification (building/running tests) against dev container
+   - still displaying error 500 code in HTML (exception mappers not catching fully)
 
 ### Week [6] Progress
-- Phase III Complete
+- Phase III in progress
  - reconfigured unit tests and added 8 integration tests
  - challenges: unit tests were passing but integration tests were failing on server startup
+
+### Week [7] Progress
+- Phase III Complete
+ - fix: aligned REST exception mappers with issue #242 spec and add full test suite
+ - fix: honored Jackson annotations on the /ws/rs JSON mapper
+ - updated contribution repo with code changes, testing strategy, and implementation notes
+ - challenges:
+   - had to realign entire mapper set
+   - had the HTML 500 failure again, there was a stack trace leak
+   - integration tests wouldn't start and had to rewrite tests
+   - `details:null` emission, needed to find root cause
 
 ### Code Changes
 
@@ -258,7 +275,7 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
 - `webserv/rest/RxWebService.java` — rethrow `RxStatus.valueOf` failure with a clean, FQCN-free validation message
 - `resources/applicationContextREST.xml` — register the 6 mappers on the `/services` server
 - `resources/spring_ws.xml` — register the 6 mappers on the `/ws/rs/*` server; switch `jacksonObjectMapper` to a Jackson+JAXB introspector pair
-- - `ErrorResponseUnitTest`, `AccessDeniedExceptionMapperUnitTest`, `SecurityExceptionMapperUnitTest`, `PatientDirectiveExceptionMapperUnitTest`, `IllegalArgumentExceptionMapperUnitTest`, `ConversionExceptionMapperUnitTest`, `GeneralExceptionMapperUnitTest` (22 unit tests), `ExceptionMapperIntegrationTest` (8 integration tests)
+- `ErrorResponseUnitTest`, `AccessDeniedExceptionMapperUnitTest`, `SecurityExceptionMapperUnitTest`, `PatientDirectiveExceptionMapperUnitTest`, `IllegalArgumentExceptionMapperUnitTest`, `ConversionExceptionMapperUnitTest`, `GeneralExceptionMapperUnitTest` (22 unit tests), `ExceptionMapperIntegrationTest` (8 integration tests)
 
 **Key commits:** [Links to important commits]
 - `5f4e5be` feat: add ErrorResponse class for structured JSON error responses [Link](https://github.com/carlos-emr/carlos/commit/5f4e5be1afe6fe1cb2ca1c38c9c52ed021a44f0c)
