@@ -253,14 +253,21 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
 ### Code Changes
 
 **Files modified:** [List]
+- `webserv/rest/response/ErrorResponse.java` *(new)* — JSON error contract (`code`/`message`/`details`/`timestamp`)
+- `webserv/rest/exceptionMapping/` *(new, 6 mappers)* — `AccessDeniedExceptionMapper`, `SecurityExceptionMapper`, `PatientDirectiveExceptionMapper`, `IllegalArgumentExceptionMapper`, `ConversionExceptionMapper`, `GeneralExceptionMapper`
+- `webserv/rest/RxWebService.java` — rethrow `RxStatus.valueOf` failure with a clean, FQCN-free validation message
+- `resources/applicationContextREST.xml` — register the 6 mappers on the `/services` server
+- `resources/spring_ws.xml` — register the 6 mappers on the `/ws/rs/*` server; switch `jacksonObjectMapper` to a Jackson+JAXB introspector pair
+- - `ErrorResponseUnitTest`, `AccessDeniedExceptionMapperUnitTest`, `SecurityExceptionMapperUnitTest`, `PatientDirectiveExceptionMapperUnitTest`, `IllegalArgumentExceptionMapperUnitTest`, `ConversionExceptionMapperUnitTest`, `GeneralExceptionMapperUnitTest` (22 unit tests), `ExceptionMapperIntegrationTest` (8 integration tests)
+
 **Key commits:** [Links to important commits]
-- `5f4e5be` feat: add ErrorResponse class for structured JSON error responses 
-- `5a9740f` feat: add JAX-RS exception mappers for REST API error handling
-- `2769920` fix: register JAX-RS exception mappers to return JSON errors
-- `b9180b6` test: add unit tests for JAX-RS
-- `e676198` fix: register exception mappers on the /ws/rs JAX-RS server
-- `cbce03a` fix: align REST exception mappers with issue #242 spec and add full test suite
-- `27172460` fix: honor Jackson annotations on the /ws/rs JSON mapper
+- `5f4e5be` feat: add ErrorResponse class for structured JSON error responses [Link](https://github.com/carlos-emr/carlos/commit/5f4e5be1afe6fe1cb2ca1c38c9c52ed021a44f0c)
+- `5a9740f` feat: add JAX-RS exception mappers for REST API error handling [Link](https://github.com/carlos-emr/carlos/commit/5a9740f9320fce53c2281c4477caed6154b6ffa2)
+- `2769920` fix: register JAX-RS exception mappers to return JSON errors [Link](https://github.com/carlos-emr/carlos/commit/2769920644667f7e74b5b0249518037736a81912)
+- `b9180b6` test: add unit tests for JAX-RS [Link](https://github.com/carlos-emr/carlos/commit/b9180b6bbd1b964229941639f9b8ea91c847174e)
+- `e676198` fix: register exception mappers on the /ws/rs JAX-RS server [Link](https://github.com/carlos-emr/carlos/commit/e67619849c07b38f07f147f83613414cac82903c)
+- `cbce03a` fix: aligned REST exception mappers with issue #242 spec and add full test suite [Link](https://github.com/carlos-emr/carlos/commit/cbce03a7df9672950725168fd0b4c2436e598f3a)
+- `27172460` fix: honor Jackson annotations on the /ws/rs JSON mapper [Link](https://github.com/carlos-emr/carlos/commit/27172460a2b6ab7308cb886e87f22024c2edb882)
 
 **Approach decisions:** [Why you chose certain approaches]
 - **Six mappers matching the issue spec exactly** An initial codebase-derived set (WebApplication/OperationNotSupported mappers) was replaced once the authoritative issue table was confirmed — added `PatientDirective`/`Conversion`, fixed `Security`'s code to `SECURITY_ERROR`
