@@ -145,19 +145,26 @@ Manual:
 ## Testing Strategy
 
 ### Unit Tests
+`src/test/.../webserv/rest/exceptionMapping/` — 22 tests across 7 classes, JUnit 5 + AssertJ, all passing
 
-- [ ] Test case 1: [Description]
-- [ ] Test case 2: [Description]
-- [ ] Test case 3: [Description]
+- [x] **Test case 1 — Each mapper returns the correct status + code:** one `*MapperUnitTest` per mapper asserts the HTTP status and `ErrorResponse.code` for its exception type: `AccessDenied`→403/`ACCESS_DENIED`, `Security`→403/`SECURITY_ERROR`, `PatientDirective`→403/`PATIENT_DIRECTIVE`, `IllegalArgument`→400/`VALIDATION_ERROR`, `Conversion`→400/`CONVERSION_ERROR`, `General`→500/`INTERNAL_ERROR`
+- [x] **Test case 2 — PHI / internal-detail safety:** `AccessDeniedException` exposes only `permission`/`action` in `details` (never the `subject`/`demographicNo`); `GeneralExceptionMapper` returns a generic message and does not echo the exception text
+- [x] **Test case 3 — Logging & ErrorResponse contract:** `LogCapture` verifies log levels and stack-trace capture (AccessDenied→WARN with throwable, PatientDirective→INFO, General→ERROR with throwable); `ErrorResponseUnitTest` verifies the auto-populated ISO-8601 timestamp, `@JsonPropertyOrder` field order, `details` present when provided, and **`details` omitted when null** (`shouldExcludeDetailsWhenNull`)
 
 ### Integration Tests
+'ExceptionMapperIntegrationTest` — 8 tests, end-to-end over an in-process CXF JAX-RS server (local transport) with a production-mirroring JSON provider (Jackson+JAXB introspector pair)
 
-- [ ] Integration scenario 1
-- [ ] Integration scenario 2
+- [x] **Integration scenario 1 — End-to-end status mapping per exception type:** a stub resource throws each exception; asserts the real HTTP status over the wire (403 for AccessDenied/Security/PatientDirective, 400 for IllegalArgument/Conversion, 500 for an unhandled exception)
+- [x] **Integration scenario 2 — Wire-format contract:** every error response is `application/json`; the null-`details` field is omitted from the serialized body; and no stack trace / internal class name leaks into the response body
 
 ### Manual Testing
 
-[What you tested manually and results]
+Verified in the dev container (built + deployed, authenticated session as `carlosdoc`):
+
+- **Bug reproduction & fix** — `GET /ws/rs/rx/drugs/active/1`
+  - Before: `HTTP 500`, `text/html` error page (uncaught `IllegalArgumentException` from `RxStatus.valueOf("ACTIVE")`)
+  - After: `HTTP 400`, `application/json` → `{"code":"VALIDATION_ERROR","message":"Unknown drug status: active","timestamp":"..."}` — structured JSON, no `details` field, no stack trace
+- **Regression check** — `GET /ws/rs/rx/drugs/all/1`: `HTTP 200`, `application/json` with drug data; response structure unchanged vs. before the mapper/introspector changes (confirms the `spring_ws.xml` introspector fix did not alter existing REST output)
 
 ---
 
