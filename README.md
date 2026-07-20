@@ -145,17 +145,55 @@ Manual:
 ## Testing Strategy
 
 ### Unit Tests
-`src/test/.../webserv/rest/exceptionMapping/` — 22 tests across 7 classes, JUnit 5 + AssertJ, all passing
+`src/test/java/io/github/carlos_emr/carlos/webserv/rest/exceptionMapping/` — JUnit 5 + AssertJ, 22 tests, all passing.
 
-- [x] **Test case 1 — Each mapper returns the correct status + code:** one `*MapperUnitTest` per mapper asserts the HTTP status and `ErrorResponse.code` for its exception type: `AccessDenied`→403/`ACCESS_DENIED`, `Security`→403/`SECURITY_ERROR`, `PatientDirective`→403/`PATIENT_DIRECTIVE`, `IllegalArgument`→400/`VALIDATION_ERROR`, `Conversion`→400/`CONVERSION_ERROR`, `General`→500/`INTERNAL_ERROR`
-- [x] **Test case 2 — PHI / internal-detail safety:** `AccessDeniedException` exposes only `permission`/`action` in `details` (never the `subject`/`demographicNo`); `GeneralExceptionMapper` returns a generic message and does not echo the exception text
-- [x] **Test case 3 — Logging & ErrorResponse contract:** `LogCapture` verifies log levels and stack-trace capture (AccessDenied→WARN with throwable, PatientDirective→INFO, General→ERROR with throwable); `ErrorResponseUnitTest` verifies the auto-populated ISO-8601 timestamp, `@JsonPropertyOrder` field order, `details` present when provided, and **`details` omitted when null** (`shouldExcludeDetailsWhenNull`)
+**ErrorResponseUnitTest**
+- [x] `shouldSetTimestampOnConstruction` — `ErrorResponse.of(...)` populates an ISO-8601 UTC timestamp (`yyyy-MM-ddTHH:mm:ssZ`)
+- [x] `shouldSerializeToJsonCorrectly` — serialized JSON contains `code`/`message`/`timestamp` in the order pinned by `@JsonPropertyOrder`
+- [x] `shouldIncludeDetailsWhenProvided` — `withDetails(...)` populates `details` and it appears in the JSON
+- [x] `shouldExcludeDetailsWhenNull` — null `details` is omitted from the serialized JSON
+
+**AccessDeniedExceptionMapperUnitTest**
+- [x] `shouldReturn403Status` — maps `AccessDeniedException` to HTTP 403
+- [x] `shouldReturnAccessDeniedErrorCode` — body `code` is `ACCESS_DENIED`
+- [x] `shouldIncludePermissionInDetails` — `details` carries `permission` + `action` but not the `subject` (demographicNo)
+- [x] `shouldLogFullExceptionWithStackTrace` — logs at WARN with the exception attached (stack trace captured server-side)
+
+**SecurityExceptionMapperUnitTest**
+- [x] `shouldReturn403Status` — maps `SecurityException` to HTTP 403
+- [x] `shouldReturnSecurityErrorCode` — body `code` is `SECURITY_ERROR`
+
+**PatientDirectiveExceptionMapperUnitTest**
+- [x] `shouldReturn403Status` — maps `PatientDirectiveException` to HTTP 403
+- [x] `shouldReturnPatientDirectiveCode` — body `code` is `PATIENT_DIRECTIVE`
+- [x] `shouldLogAtInfoLevel` — logged at INFO (expected policy outcome), not WARN/ERROR
+
+**IllegalArgumentExceptionMapperUnitTest**
+- [x] `shouldReturn400Status` — maps `IllegalArgumentException` to HTTP 400
+- [x] `shouldReturnValidationErrorCode` — body `code` is `VALIDATION_ERROR`
+- [x] `shouldIncludeExceptionMessage` — the exception message is preserved as client validation feedback
+
+**ConversionExceptionMapperUnitTest**
+- [x] `shouldReturn400Status` — maps `ConversionException` to HTTP 400
+- [x] `shouldReturnConversionErrorCode` — body `code` is `CONVERSION_ERROR`
+
+**GeneralExceptionMapperUnitTest**
+- [x] `shouldReturn500Status` — maps any unhandled `Throwable` to HTTP 500
+- [x] `shouldReturnInternalErrorCode` — body `code` is `INTERNAL_ERROR`
+- [x] `shouldNotExposeExceptionMessage` — body carries a generic message, not the exception text
+- [x] `shouldLogFullStackTrace` — logs at ERROR with the full exception attached
 
 ### Integration Tests
 'ExceptionMapperIntegrationTest` — 8 tests, end-to-end over an in-process CXF JAX-RS server (local transport) with a production-mirroring JSON provider (Jackson+JAXB introspector pair)
 
-- [x] **Integration scenario 1 — End-to-end status mapping per exception type:** a stub resource throws each exception; asserts the real HTTP status over the wire (403 for AccessDenied/Security/PatientDirective, 400 for IllegalArgument/Conversion, 500 for an unhandled exception)
-- [x] **Integration scenario 2 — Wire-format contract:** every error response is `application/json`; the null-`details` field is omitted from the serialized body; and no stack trace / internal class name leaks into the response body
+- [x] `shouldReturn403ForAccessDeniedException` — stub endpoint throws `AccessDeniedException`; response is HTTP 403 with `code` `ACCESS_DENIED`
+- [x] `shouldReturn403ForSecurityException` — throws `SecurityException`; HTTP 403 with `code` `SECURITY_ERROR`
+- [x] `shouldReturn403ForPatientDirectiveException` — throws `PatientDirectiveException`; HTTP 403 with `code` `PATIENT_DIRECTIVE`
+- [x] `shouldReturn400ForIllegalArgumentException` — throws `IllegalArgumentException`; HTTP 400 with `code` `VALIDATION_ERROR`, and null `details` is omitted from the body
+- [x] `shouldReturn400ForConversionException` — throws `ConversionException`; HTTP 400 with `code` `CONVERSION_ERROR`
+- [x] `shouldReturn500ForUnhandledException` — throws an unmapped exception; HTTP 500 with `code` `INTERNAL_ERROR`
+- [x] `shouldReturnJsonContentType` — error responses are served as `application/json`
+- [x] `shouldNotExposeStackTraceInResponse` — the 500 body contains no exception message, class name, or stack-trace markers
 
 ### Manual Testing
 
