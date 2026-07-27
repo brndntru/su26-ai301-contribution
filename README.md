@@ -3,7 +3,7 @@
 **Contribution Number:** [1]  
 **Student:** [Brandon Trieu]  
 **Issue:** [[GitHub issue link](https://github.com/carlos-emr/carlos/issues/242)]  
-**Status:** [Phase III] [Complete]
+**Status:** [Phase IV] [In Progress]
 
 ---
 
@@ -266,6 +266,11 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
    - had the HTML 500 failure again, there was a stack trace leak
    - integration tests wouldn't start and had to rewrite tests
    - `details:null` emission, needed to find root cause
+
+### Week [8] Progress
+- Phase IV in progress
+ - final review of work (modified files, commits, tests)
+ - began PR
 
 ### Code Changes
 
