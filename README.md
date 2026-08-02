@@ -3,7 +3,7 @@
 **Contribution Number:** [1]  
 **Student:** [Brandon Trieu]  
 **Issue:** [[GitHub issue link](https://github.com/carlos-emr/carlos/issues/242)]  
-**Status:** [Phase IV] [In Progress]
+**Status:** [Phase IV] [Complete]
 
 ---
 
@@ -271,6 +271,18 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
 - Phase IV in progress
  - final review of work (modified files, commits, tests)
  - began PR
+ - challenges:
+   - merge conflicts with upstream repo
+
+### Week [9] Progress
+- Phase IV Complete
+  - all commits signed off for the DCO
+  - chore: dropped unrelated devcontainer and gitignore changes from carlos-emr#242
+  - created and submitted Pull Request on Github
+  - challenges:
+    - signing off for DCO kept failing... duplicate files needed to be removed
+    - merge conflicts with upstream repo
+
 
 ### Code Changes
 
@@ -303,15 +315,15 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** [brndntru PR](https://github.com/carlos-emr/carlos/pull/3305)]
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** The REST API returned raw HTTP 500 responses with HTML error pages (and exposed stack traces) whenever an endpoint threw an uncaught exception. This PR adds JAX-RS exception mappers that convert exceptions into structured, client-safe JSON error bodies with appropriate status codes, and logs full detail server-side only.
 
 **Maintainer Feedback:**
 - [Date]: [Summary of feedback received]
 - [Date]: [How you addressed it]
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** [Awaiting review]
 
 ---
 
@@ -319,15 +331,26 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
 
 ### Technical Skills Gained
 
-[What you learned technically]
+- JAX-RS exception mapping
+- Spring wiring across multiple context files
+- Testing techniques
+- Debugging in a live deployment
+- Signing off commits for DOC
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
+- Build not completing: Initially, I had a lot of problems with the build not completing and getting stuck at a specific point in installation for over an hour. I figured out it was getting stuck at the PlayWright installation, so I fixed it by commenting it out and making the build skip it.
+- Passed unit tests but incorrect browser output: After registering the mappers, the endpoint still returned a default HTML 500 error page instead of the desired JSON response page with the correct error code. I discovered that the REST server lives in a different Spring file than the one the issue pointed at.
+- Reintroduction of bug: Making the validation mapper echo the exception message, albeit being a correctly change, reintroduced the HTML 500 error. The message contained a fully qualified class name which the response stack-trace sanitizer treats as a leak, so I fixed it at the source with a clean, human-readable message.
+- Serialization: A response kept emitting "details:null" even though the class was annotated to omit it. The JAXB-only introspector was the root cause.
+- CXF: CXF tried an embedded transport that wasn't on the classpath. A file-ownership mismatch also broke a git rebase mid-flight.
 
 ### What I'd Do Differently Next Time
 
-[Reflection on your process]
+- Read authoritative spec first: I had to do a complete realignment late into the issue, because I didn't provide Claude with the exact deliverables. Next time, I will confirm and provide the exact deliverables up front.
+- Earlier verification: I learned that unit tests can pass even when the app is broken. The mappers weren't wired into the running server correctly, so I was building on top of broken wiring. Next time, I should manually check and verify it works in the browser first, then continue writing the unit tests.
+- Less assuming: I assumed a component was wired the way the docs implied, leading to major setbacks. Next time, I should check which mapper actually runs and who serves the URL.
+- More prep time: Next time, I should devote more time to reading the codebase and fully understanding the problem, exactly deliverables, and previous PR attempts.
 
 ---
 
