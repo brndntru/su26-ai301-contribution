@@ -275,7 +275,7 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
    - merge conflicts with upstream repo
 
 ### Week [9] Progress
-- Phase IV Complete
+- Phase IV Complete: Awaiting Review
   - all commits signed off for the DCO
   - chore: dropped unrelated devcontainer and gitignore changes from carlos-emr#242
   - created and submitted Pull Request on Github
@@ -283,6 +283,14 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
     - signing off for DCO kept failing... duplicate files needed to be removed
     - merge conflicts with upstream repo
 
+### Week [10] Progress
+- Phase IV Complete: Awaiting Review
+  - docs: add contract Javadoc to exception mapper toResponse methods
+  - added docstrings and edited PR title to more fully describe issue
+  - challenges:
+    - 2 failed pre-merge checks (docstring coverage and title check)
+    - waiting for maintainer to review/respond
+   
 
 ### Code Changes
 
