@@ -328,8 +328,8 @@ Verified in the dev container (built + deployed, authenticated session as `carlo
 **PR Description:** The REST API returned raw HTTP 500 responses with HTML error pages (and exposed stack traces) whenever an endpoint threw an uncaught exception. This PR adds JAX-RS exception mappers that convert exceptions into structured, client-safe JSON error bodies with appropriate status codes, and logs full detail server-side only.
 
 **Maintainer Feedback:**
-- [Date]: [Summary of feedback received]
-- [Date]: [How you addressed it]
+- [8/2/26]: [No feedback received]
+- [8/9/26]: [No feedback received]
 
 **Status:** [Awaiting review]
 
